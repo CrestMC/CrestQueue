@@ -1,0 +1,15 @@
+name: CrestQueue
+version: '${version}'
+main: club.crestmc.crestqueue.CrestQueue
+api-version: 1.16
+authors: [ Blurmit ]
+description: A queue plugin for CrestMC
+website: https://www.crestmc.club
+softdepend:
+  - Basics
+
+permissions:
+  crestqueue.join:
+    default: true
+  crestqueue.leave:
+    default: true

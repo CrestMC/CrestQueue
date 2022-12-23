@@ -1,0 +1,27 @@
+# ALl valid queues. Please enter the value exactly as it is put in BungeeCord's config.yml.
+Valid-Queues:
+  Skyblock:
+    server: "skyblock"
+    permission: "crestqueue.join.skyblock"
+  KitPvP:
+    server: "kitpvp"
+    permission: "crestqueue.join.kitpvp"
+
+Messages:
+  Join-Queue: "&aYou've been added to the &e{name} &aqueue."
+  Leave-Queue: "&cYou've left the &e{name} &cqueue."
+  Sent-Queue: "&aYou are now being sent to &e{name}&a..."
+  No-Permission: "&cYou do not have permission to interact with queues."
+  No-Permission-Join-Queue: "&cYou do not have permission to join the &e{name} &cqueue."
+  Waiting-Queue: |-
+    &r
+    &b{name} Queue Position: {queue-position}&3/&b{queue-total}
+    &7&oRanks get a higher priority in the queue. 
+    &7&oYou can purchase a rank at &bhttps://store.crestmc.club/
+    &7&oYou can leave the queue with &b/leavequeue
+    &r
+    &cThe server you are trying to join is currently {queue-server-state}.
+    &r
+  Already-In-Queue: "&cYou are already queued for a server."
+  Not-In-Queue: "&cYou are not queued for that server."
+  Invalid-Queue: "&cThere is no queue with the name &e{name}&c."
