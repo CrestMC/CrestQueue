@@ -29,6 +29,13 @@ public class QueueListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
+        if (plugin.getQueueManager().getExitingPlayers().containsKey(event.getPlayer().getUniqueId())) {
+            plugin.getQueueManager().getQueuedPlayers().remove(event.getPlayer().getUniqueId());
+            plugin.getQueueManager().getOnlineQueuedPlayers().remove(event.getPlayer().getUniqueId());
+            plugin.getQueueManager().getExitingPlayers().remove(event.getPlayer().getUniqueId());
+            return;
+        }
+
         if (!plugin.getQueueManager().getQueuedPlayers().containsKey(event.getPlayer().getUniqueId())) {
             return;
         }

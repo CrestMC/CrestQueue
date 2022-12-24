@@ -1,4 +1,4 @@
-package club.crestmc.crestqueue.util;
+package club.crestmc.crestqueue.util.reflect;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.ClassPath;

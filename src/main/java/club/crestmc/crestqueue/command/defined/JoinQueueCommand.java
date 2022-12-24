@@ -17,7 +17,7 @@ public class JoinQueueCommand extends CommandBase {
     protected JoinQueueCommand(CrestQueue plugin) {
         super(plugin.getName());
         setName("joinqueue");
-        setAliases(Arrays.asList("joinq", "queuejoin", "enterqueue"));
+        setAliases(Arrays.asList("joinq", "queuejoin", "enterqueue", "join"));
         setDescription("Joins a server queue");
         setPermission("crestqueue.join");
 

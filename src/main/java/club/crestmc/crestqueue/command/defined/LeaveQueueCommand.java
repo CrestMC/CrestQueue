@@ -17,7 +17,7 @@ public class LeaveQueueCommand extends CommandBase {
     protected LeaveQueueCommand(CrestQueue plugin) {
         super(plugin.getName());
         setName("leavequeue");
-        setAliases(Arrays.asList("leaveq", "queueleave", "exitqueue"));
+        setAliases(Arrays.asList("leaveq", "queueleave", "exitqueue", "leave"));
         setDescription("Leaves a server queue");
         setPermission("crestqueue.leave");
 

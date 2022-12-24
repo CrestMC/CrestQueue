@@ -41,6 +41,13 @@ public enum Messages {
         }
     },
 
+    SEND_FAILED() {
+        @Override
+        public String toString() {
+            return ChatColor.translateAlternateColorCodes('&', JavaPlugin.getPlugin(CrestQueue.class).getConfig().getString("Messages.Send-Failed"));
+        }
+    },
+
     SENT_QUEUE() {
         @Override
         public String toString() {

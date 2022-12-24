@@ -7,7 +7,11 @@ Valid-Queues:
     server: "kitpvp"
     permission: "crestqueue.join.kitpvp"
 
+Waiting-Message-Send-Interval: 30
+Send-Fail-Threshold: 3
+
 Messages:
+  Send-Failed: "&cFailed to send you to &e{name} &cin {attempts} attempts, giving up and removing you from the queue."
   Join-Queue: "&aYou've been added to the &e{name} &aqueue."
   Leave-Queue: "&cYou've left the &e{name} &cqueue."
   Sent-Queue: "&aYou are now being sent to &e{name}&a..."

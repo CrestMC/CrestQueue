@@ -2,8 +2,8 @@ package club.crestmc.crestqueue.queue;
 
 import club.crestmc.crestqueue.CrestQueue;
 import club.crestmc.crestqueue.util.lang.Messages;
+import club.crestmc.crestqueue.util.collections.Collections;
 import club.crestmc.crestqueue.util.pluginmessage.PluginMessageHelper;
-import club.crestmc.crestqueue.util.uuid.UUIDs;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -16,22 +16,26 @@ import java.util.stream.Collectors;
 public class QueueManager {
 
     private final CrestQueue plugin;
-    private BukkitTask task;
 
     private final Set<Queue> queues;
-    private final Map<UUID, String> queuedPlayers;
+    private final NavigableMap<UUID, String> queuedPlayers;
     private final Map<UUID, String> onlineQueuedPlayers;
+    private final Map<UUID, Integer> exitingPlayers;
 
     public QueueManager(CrestQueue plugin) {
+        this.plugin = plugin;
+
         plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
         plugin.getServer().getPluginManager().registerEvents(new QueueListener(plugin), plugin);
 
-        this.plugin = plugin;
-        this.task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, this::runQueue, 1L, 1L);
+        int waitMessageSendInterval = plugin.getConfig().getInt("Waiting-Message-Send-Interval");
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, this::runQueue, 0L, 5L);
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, this::sendStatusMessages, 20L * waitMessageSendInterval, 20L * waitMessageSendInterval);
 
         this.queues = new HashSet<>();
-        this.queuedPlayers = new HashMap<>();
+        this.queuedPlayers = new TreeMap<>();
         this.onlineQueuedPlayers = new HashMap<>();
+        this.exitingPlayers = new HashMap<>();
 
         loadQueues();
     }
@@ -46,18 +50,33 @@ public class QueueManager {
         onlineQueuedPlayers.remove(uuid);
     }
 
-    public void sendToServer(UUID uuid) {
+    public void sendToServer(UUID uuid, String server) {
         Player player = plugin.getServer().getPlayer(uuid);
 
         if (player == null) {
             return;
         }
 
-        player.sendMessage(Messages.SENT_QUEUE.toString().replace("{name}", queuedPlayers.get(uuid)));
-        PluginMessageHelper.sendData("BungeeCord", "ConnectOther", player.getName(), queuedPlayers.get(uuid));
+        if (exitingPlayers.containsKey(uuid)) {
+            int attempt = exitingPlayers.get(uuid) + 1;
+            int threshold = plugin.getConfig().getInt("Send-Fail-Threshold");
 
-        queuedPlayers.remove(uuid);
-        onlineQueuedPlayers.remove(uuid);
+            exitingPlayers.replace(uuid, attempt);
+
+            if (attempt >= threshold) {
+                player.sendMessage(Messages.SEND_FAILED.toString().replace("{name}", queuedPlayers.get(uuid)).replace("{attempts}", threshold + ""));
+
+                queuedPlayers.remove(uuid);
+                onlineQueuedPlayers.remove(uuid);
+                exitingPlayers.remove(uuid);
+                return;
+            }
+        } else {
+            exitingPlayers.put(uuid, 0);
+        }
+
+        player.sendMessage(Messages.SENT_QUEUE.toString().replace("{name}", server));
+        PluginMessageHelper.sendData("BungeeCord", "ConnectOther", player.getName(), server);
     }
 
     private void runQueue() {
@@ -77,13 +96,51 @@ public class QueueManager {
             return;
         }
 
-        queuedPlayers.keySet().stream().sorted(Comparator.comparingLong(this::getPriority)).forEach(uuid -> {
+        queuedPlayers.keySet().stream().sorted(Comparator.comparingLong(priority -> -getPriority(priority))).forEach(uuid -> {
             Player player = plugin.getServer().getPlayer(uuid);
             String server = queuedPlayers.get(uuid);
+
+            if (isServerOffline(server)) {
+                return;
+            }
+
+            if (isServerFull(server)) {
+                if (player == null) {
+                    return;
+                }
+
+                if (player.hasPermission("crestqueue.bypass." + server)) {
+                    sendToServer(uuid, queuedPlayers.get(uuid));
+                    return;
+                }
+
+                return;
+            }
+
+            UUID queuedPlayer = queuedPlayers.keySet().stream().sorted(Comparator.comparingLong(priority -> -getPriority(priority))).distinct().toArray(UUID[]::new)[0];
+            sendToServer(queuedPlayer, queuedPlayers.get(queuedPlayer));
+        });
+    }
+
+    private void sendStatusMessages() {
+        Set<UUID> sortedQueuedPlayers = queuedPlayers.keySet().stream().sorted(Comparator.comparingLong(priority -> -getPriority(priority))).collect(Collectors.toCollection(LinkedHashSet::new));
+
+        if (plugin.getServer().getOnlinePlayers().size() == 0) {
+            return;
+        }
+
+        if (queuedPlayers.size() == 0) {
+            return;
+        }
+
+        sortedQueuedPlayers.forEach(uuid -> {
+            Player player = plugin.getServer().getPlayer(uuid);
+            String server = queuedPlayers.get(uuid);
+            int position = Collections.getPositionOfObject(sortedQueuedPlayers, uuid) + 1;
             String waitMessage = Messages.QUEUE_WAIT.toString()
                     .replace("{name}", server)
                     .replace("{queue-total}", getPlayersQueuedFor(server).size() + "")
-                    .replace("{queue-position}", getPlayersQueuedFor(server).size() + "");
+                    .replace("{queue-position}", position + "");
 
             if (isServerOffline(server)) {
                 if (player != null) {
@@ -97,16 +154,8 @@ public class QueueManager {
                     return;
                 }
 
-                if (player.hasPermission("crestqueue.bypass." + server)) {
-                    sendToServer(uuid);
-                    return;
-                }
-
                 player.sendMessage(waitMessage.replace("{queue-server-state}", "Full"));
-                return;
             }
-
-            sendToServer(uuid);
         });
     }
 
@@ -129,6 +178,10 @@ public class QueueManager {
 
     public Set<UUID> getPlayersQueuedFor(String serverName) {
         return queuedPlayers.keySet().stream().filter(player -> queuedPlayers.get(player).equalsIgnoreCase(serverName)).collect(Collectors.toSet());
+    }
+
+    public Map<UUID, Integer> getExitingPlayers() {
+        return exitingPlayers;
     }
 
     public Map<UUID, String> getQueuedPlayers() {
