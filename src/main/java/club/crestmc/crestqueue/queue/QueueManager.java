@@ -8,7 +8,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,7 +28,7 @@ public class QueueManager {
         plugin.getServer().getPluginManager().registerEvents(new QueueListener(plugin), plugin);
 
         int waitMessageSendInterval = plugin.getConfig().getInt("Waiting-Message-Send-Interval");
-        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, this::runQueue, 0L, 5L);
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, this::runQueue, 0L, 20L);
         plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, this::sendStatusMessages, 20L * waitMessageSendInterval, 20L * waitMessageSendInterval);
 
         this.queues = new HashSet<>();
@@ -96,30 +95,32 @@ public class QueueManager {
             return;
         }
 
-        queuedPlayers.keySet().stream().sorted(Comparator.comparingLong(priority -> -getPriority(priority))).forEach(uuid -> {
-            Player player = plugin.getServer().getPlayer(uuid);
-            String server = queuedPlayers.get(uuid);
+        Map.Entry<UUID, String> playerEntry = queuedPlayers.firstEntry();
 
-            if (isServerOffline(server)) {
+        UUID uuid = playerEntry.getKey();
+        Player player = plugin.getServer().getPlayer(uuid);
+
+        String server = playerEntry.getValue();
+
+        if (isServerOffline(server)) {
+            return;
+        }
+
+        if (isServerFull(server)) {
+            if (player == null) {
                 return;
             }
 
-            if (isServerFull(server)) {
-                if (player == null) {
-                    return;
-                }
-
-                if (player.hasPermission("crestqueue.bypass." + server)) {
-                    sendToServer(uuid, queuedPlayers.get(uuid));
-                    return;
-                }
-
+            if (player.hasPermission("crestqueue.bypass." + server)) {
+                sendToServer(uuid, server);
                 return;
             }
 
-            UUID queuedPlayer = queuedPlayers.keySet().stream().sorted(Comparator.comparingLong(priority -> -getPriority(priority))).distinct().toArray(UUID[]::new)[0];
-            sendToServer(queuedPlayer, queuedPlayers.get(queuedPlayer));
-        });
+            return;
+        }
+
+        UUID queuedPlayer = queuedPlayers.keySet().stream().sorted(Comparator.comparingLong(priority -> -getPriority(priority))).distinct().toArray(UUID[]::new)[0];
+        sendToServer(queuedPlayer, server);
     }
 
     private void sendStatusMessages() {
