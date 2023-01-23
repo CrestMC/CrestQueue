@@ -5,12 +5,16 @@ import club.crestmc.crestqueue.command.CommandBase;
 import club.crestmc.crestqueue.queue.Queue;
 import club.crestmc.crestqueue.util.lang.Messages;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-public class LeaveQueueCommand extends CommandBase {
+public class LeaveQueueCommand extends CommandBase implements TabCompleter {
 
     private final CrestQueue plugin;
 
@@ -57,5 +61,16 @@ public class LeaveQueueCommand extends CommandBase {
         player.sendMessage(Messages.LEAVE_QUEUE.toString().replace("{name}", queue.getName()));
         plugin.getQueueManager().removeFromQueue(player.getUniqueId());
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player)) {
+            return null;
+        }
+
+        Player player = (Player) sender;
+
+        return Collections.singletonList(plugin.getQueueManager().getServerPlayerQueuedFor(player.getUniqueId()));
     }
 }

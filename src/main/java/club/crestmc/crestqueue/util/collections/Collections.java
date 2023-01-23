@@ -2,7 +2,6 @@ package club.crestmc.crestqueue.util.collections;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.NavigableSet;
 
 public class Collections {
 

@@ -1,8 +1,8 @@
 package club.crestmc.crestqueue.queue;
 
 import club.crestmc.crestqueue.CrestQueue;
-import club.crestmc.crestqueue.util.lang.Messages;
 import club.crestmc.crestqueue.util.collections.Collections;
+import club.crestmc.crestqueue.util.lang.Messages;
 import club.crestmc.crestqueue.util.pluginmessage.PluginMessageHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -181,6 +181,10 @@ public class QueueManager {
         return queuedPlayers.keySet().stream().filter(player -> queuedPlayers.get(player).equalsIgnoreCase(serverName)).collect(Collectors.toSet());
     }
 
+    public String getServerPlayerQueuedFor(UUID player) {
+        return queuedPlayers.get(player);
+    }
+
     public Map<UUID, Integer> getExitingPlayers() {
         return exitingPlayers;
     }
@@ -191,6 +195,10 @@ public class QueueManager {
 
     public Map<UUID, String> getOnlineQueuedPlayers() {
         return onlineQueuedPlayers;
+    }
+
+    public Set<Queue> getQueues() {
+        return queues;
     }
 
     public boolean isPlayerQueued(UUID uuid) {

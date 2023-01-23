@@ -1,11 +1,8 @@
 package club.crestmc.crestqueue.queue;
 
 import club.crestmc.crestqueue.CrestQueue;
-import lombok.SneakyThrows;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
