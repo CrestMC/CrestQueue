@@ -13,9 +13,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class Reflector {
+public class ReflectionUtil {
 
-    private Reflector() {}
+    private ReflectionUtil() {}
 
     private static final String SERVER_PACKAGE_VERSION;
 
@@ -84,7 +84,7 @@ public class Reflector {
                     .filter(type::isAssignableFrom)
                     .map(clazz -> (Class<? extends T>) clazz)
                     .collect(Collectors.toSet())
-                    .forEach(clazz -> consumer.accept(Reflector.construct(clazz, args)));
+                    .forEach(clazz -> consumer.accept(ReflectionUtil.construct(clazz, args)));
         } catch (IOException e) {
             e.printStackTrace();
         }
