@@ -1,4 +1,4 @@
-package club.crestmc.crestqueue.util.lang;
+package club.crestmc.crestqueue.util;
 
 import club.crestmc.crestqueue.CrestQueue;
 import org.bukkit.ChatColor;

@@ -3,7 +3,7 @@ package club.crestmc.crestqueue.command.defined;
 import club.crestmc.crestqueue.CrestQueue;
 import club.crestmc.crestqueue.command.CommandBase;
 import club.crestmc.crestqueue.queue.Queue;
-import club.crestmc.crestqueue.util.lang.Messages;
+import club.crestmc.crestqueue.util.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

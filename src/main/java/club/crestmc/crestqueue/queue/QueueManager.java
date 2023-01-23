@@ -1,9 +1,9 @@
 package club.crestmc.crestqueue.queue;
 
 import club.crestmc.crestqueue.CrestQueue;
-import club.crestmc.crestqueue.util.collections.Collections;
-import club.crestmc.crestqueue.util.lang.Messages;
-import club.crestmc.crestqueue.util.pluginmessage.PluginMessageHelper;
+import club.crestmc.crestqueue.util.Collections;
+import club.crestmc.crestqueue.util.Messages;
+import club.crestmc.crestqueue.util.PluginMessageHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

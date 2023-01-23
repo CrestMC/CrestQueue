@@ -1,7 +1,7 @@
 package club.crestmc.crestqueue.command;
 
 import club.crestmc.crestqueue.CrestQueue;
-import club.crestmc.crestqueue.util.reflect.ReflectionUtil;
+import club.crestmc.crestqueue.util.ReflectionUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.SimplePluginManager;

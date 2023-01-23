@@ -1,4 +1,4 @@
-package club.crestmc.crestqueue.util.uuid;
+package club.crestmc.crestqueue.util;
 
 import com.google.gson.JsonParser;
 import org.bukkit.Bukkit;

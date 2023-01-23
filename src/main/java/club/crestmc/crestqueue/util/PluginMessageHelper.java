@@ -1,4 +1,4 @@
-package club.crestmc.crestqueue.util.pluginmessage;
+package club.crestmc.crestqueue.util;
 
 import club.crestmc.crestqueue.CrestQueue;
 import com.google.common.collect.Iterables;
