@@ -1,10 +1,10 @@
-package club.crestmc.crestqueue;
+package club.crestmc.queue;
 
-import club.crestmc.crestqueue.command.CommandManager;
-import club.crestmc.crestqueue.queue.QueueManager;
+import club.crestmc.queue.command.CommandManager;
+import club.crestmc.queue.queue.QueueManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class CrestQueue extends JavaPlugin {
+public final class Queue extends JavaPlugin {
 
     private QueueManager queueManager;
     private CommandManager commandManager;
@@ -21,7 +21,7 @@ public final class CrestQueue extends JavaPlugin {
         commandManager = new CommandManager(this);
         commandManager.registerCommands();
 
-        getLogger().info("CrestQueue has been successfully enabled.");
+        getLogger().info("Queue has been successfully enabled.");
     }
 
     public QueueManager getQueueManager() {

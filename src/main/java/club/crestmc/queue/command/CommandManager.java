@@ -1,7 +1,7 @@
-package club.crestmc.crestqueue.command;
+package club.crestmc.queue.command;
 
-import club.crestmc.crestqueue.CrestQueue;
-import club.crestmc.crestqueue.util.ReflectionUtil;
+import club.crestmc.queue.Queue;
+import club.crestmc.queue.util.ReflectionUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.SimplePluginManager;
@@ -12,15 +12,15 @@ import java.util.logging.Level;
 
 public class CommandManager {
 
-    private final CrestQueue plugin;
+    private final Queue plugin;
     private SimpleCommandMap commandMap;
 
-    public CommandManager(CrestQueue plugin) {
+    public CommandManager(Queue plugin) {
         this.plugin = plugin;
     }
 
     public void registerCommands() {
-        ReflectionUtil.consume("club.crestmc.crestqueue.command.defined", CrestQueue.class.getClassLoader(), CommandBase.class, CommandBase::registerCommand, true, plugin);
+        ReflectionUtil.consume("club.crestmc.queue.command.defined", Queue.class.getClassLoader(), CommandBase.class, CommandBase::registerCommand, true, plugin);
     }
 
     public void register(String command, CommandBase commandClass) {

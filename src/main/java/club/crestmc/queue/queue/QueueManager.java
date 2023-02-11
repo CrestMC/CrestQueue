@@ -1,9 +1,9 @@
-package club.crestmc.crestqueue.queue;
+package club.crestmc.queue.queue;
 
-import club.crestmc.crestqueue.CrestQueue;
-import club.crestmc.crestqueue.util.Collections;
-import club.crestmc.crestqueue.util.Messages;
-import club.crestmc.crestqueue.util.PluginMessageHelper;
+import club.crestmc.queue.Queue;
+import club.crestmc.queue.util.Collections;
+import club.crestmc.queue.util.Messages;
+import club.crestmc.queue.util.PluginMessageHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -14,14 +14,14 @@ import java.util.stream.Collectors;
 
 public class QueueManager {
 
-    private final CrestQueue plugin;
+    private final Queue plugin;
 
-    private final Set<Queue> queues;
+    private final Set<club.crestmc.queue.queue.Queue> queues;
     private final NavigableMap<UUID, String> queuedPlayers;
     private final Map<UUID, String> onlineQueuedPlayers;
     private final Map<UUID, Integer> exitingPlayers;
 
-    public QueueManager(CrestQueue plugin) {
+    public QueueManager(Queue plugin) {
         this.plugin = plugin;
 
         plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
@@ -111,7 +111,7 @@ public class QueueManager {
                 return;
             }
 
-            if (player.hasPermission("crestqueue.bypass." + server)) {
+            if (player.hasPermission("queue.bypass." + server)) {
                 sendToServer(uuid, server);
                 return;
             }
@@ -164,7 +164,7 @@ public class QueueManager {
         plugin.getConfig().getConfigurationSection("Valid-Queues").getValues(false).forEach((key, values) -> {
             ConfigurationSection section = (ConfigurationSection) values;
 
-            Queue queue = new Queue();
+            club.crestmc.queue.queue.Queue queue = new club.crestmc.queue.queue.Queue();
             queue.setName(key);
             queue.setPermission(section.getString("permission"));
             queue.setServer(section.getString("server"));
@@ -173,7 +173,7 @@ public class QueueManager {
         });
     }
 
-    public Queue getQueue(String queueName) {
+    public club.crestmc.queue.queue.Queue getQueue(String queueName) {
         return queues.stream().filter(queue -> queue.getName().equalsIgnoreCase(queueName)).findFirst().orElse(null);
     }
 
@@ -197,7 +197,7 @@ public class QueueManager {
         return onlineQueuedPlayers;
     }
 
-    public Set<Queue> getQueues() {
+    public Set<club.crestmc.queue.queue.Queue> getQueues() {
         return queues;
     }
 
@@ -264,7 +264,7 @@ public class QueueManager {
                 return 0;
             }
 
-            return player.hasPermission("crestqueue.priority") ? 1 : 0;
+            return player.hasPermission("queue.priority") ? 1 : 0;
         }
     }
 

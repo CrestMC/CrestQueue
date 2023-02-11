@@ -1,9 +1,8 @@
-package club.crestmc.crestqueue.command.defined;
+package club.crestmc.queue.command.defined;
 
-import club.crestmc.crestqueue.CrestQueue;
-import club.crestmc.crestqueue.command.CommandBase;
-import club.crestmc.crestqueue.queue.Queue;
-import club.crestmc.crestqueue.util.Messages;
+import club.crestmc.queue.Queue;
+import club.crestmc.queue.command.CommandBase;
+import club.crestmc.queue.util.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,14 +15,14 @@ import java.util.stream.Collectors;
 
 public class JoinQueueCommand extends CommandBase implements TabCompleter {
 
-    private final CrestQueue plugin;
+    private final Queue plugin;
 
-    protected JoinQueueCommand(CrestQueue plugin) {
+    protected JoinQueueCommand(Queue plugin) {
         super(plugin.getName());
         setName("joinqueue");
         setAliases(Arrays.asList("joinq", "queuejoin", "enterqueue", "join"));
         setDescription("Joins a server queue");
-        setPermission("crestqueue.join");
+        setPermission("queue.join");
 
         this.plugin = plugin;
     }
@@ -46,7 +45,7 @@ public class JoinQueueCommand extends CommandBase implements TabCompleter {
         }
 
         Player player = (Player) sender;
-        Queue queue = plugin.getQueueManager().getQueue(args[0]);
+        club.crestmc.queue.queue.Queue queue = plugin.getQueueManager().getQueue(args[0]);
 
         if (queue == null) {
             player.sendMessage(Messages.QUEUE_INVALID.toString().replace("{name}", args[0]));
@@ -72,6 +71,6 @@ public class JoinQueueCommand extends CommandBase implements TabCompleter {
     @Override
     @SuppressWarnings("unchecked")
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        return (List<String>) plugin.getQueueManager().getQueues().stream().map(Queue::getName).collect(Collectors.toSet());
+        return (List<String>) plugin.getQueueManager().getQueues().stream().map(club.crestmc.queue.queue.Queue::getName).collect(Collectors.toSet());
     }
 }

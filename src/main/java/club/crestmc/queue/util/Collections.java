@@ -1,4 +1,4 @@
-package club.crestmc.crestqueue.util;
+package club.crestmc.queue.util;
 
 import java.util.Collection;
 import java.util.Map;

@@ -1,9 +1,8 @@
-package club.crestmc.crestqueue.command.defined;
+package club.crestmc.queue.command.defined;
 
-import club.crestmc.crestqueue.CrestQueue;
-import club.crestmc.crestqueue.command.CommandBase;
-import club.crestmc.crestqueue.queue.Queue;
-import club.crestmc.crestqueue.util.Messages;
+import club.crestmc.queue.Queue;
+import club.crestmc.queue.command.CommandBase;
+import club.crestmc.queue.util.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,14 +15,14 @@ import java.util.List;
 
 public class LeaveQueueCommand extends CommandBase implements TabCompleter {
 
-    private final CrestQueue plugin;
+    private final Queue plugin;
 
-    protected LeaveQueueCommand(CrestQueue plugin) {
+    protected LeaveQueueCommand(Queue plugin) {
         super(plugin.getName());
         setName("leavequeue");
         setAliases(Arrays.asList("leaveq", "queueleave", "exitqueue", "leave"));
         setDescription("Leaves a server queue");
-        setPermission("crestqueue.leave");
+        setPermission("queue.leave");
 
         this.plugin = plugin;
     }
@@ -46,7 +45,7 @@ public class LeaveQueueCommand extends CommandBase implements TabCompleter {
         }
 
         Player player = (Player) sender;
-        Queue queue = plugin.getQueueManager().getQueue(args[0]);
+        club.crestmc.queue.queue.Queue queue = plugin.getQueueManager().getQueue(args[0]);
 
         if (!plugin.getQueueManager().isPlayerQueued(player.getUniqueId())) {
             player.sendMessage(Messages.NOT_IN_QUEUE + "");

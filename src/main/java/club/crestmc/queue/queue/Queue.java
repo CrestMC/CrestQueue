@@ -1,4 +1,4 @@
-package club.crestmc.crestqueue.queue;
+package club.crestmc.queue.queue;
 
 import lombok.Data;
 

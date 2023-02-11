@@ -2,10 +2,10 @@
 Valid-Queues:
   Skyblock:
     server: "skyblock"
-    permission: "crestqueue.join.skyblock"
+    permission: "queue.join.skyblock"
   KitPvP:
     server: "kitpvp"
-    permission: "crestqueue.join.kitpvp"
+    permission: "queue.join.kitpvp"
 
 Waiting-Message-Send-Interval: 30
 Send-Fail-Threshold: 3

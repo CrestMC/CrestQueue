@@ -1,6 +1,6 @@
-package club.crestmc.crestqueue.command;
+package club.crestmc.queue.command;
 
-import club.crestmc.crestqueue.CrestQueue;
+import club.crestmc.queue.Queue;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,7 +11,7 @@ public abstract class CommandBase extends BukkitCommand {
     }
 
     public void registerCommand() {
-        JavaPlugin.getPlugin(CrestQueue.class).getCommandManager().register(getName(), this);
+        JavaPlugin.getPlugin(Queue.class).getCommandManager().register(getName(), this);
     }
 
 }
