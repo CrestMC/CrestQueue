@@ -1,6 +1,7 @@
 package club.crestmc.queue;
 
 import club.crestmc.queue.command.CommandManager;
+import club.crestmc.queue.listeners.QueuePlaceholder;
 import club.crestmc.queue.queue.QueueManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,7 +22,10 @@ public final class Queue extends JavaPlugin {
         commandManager = new CommandManager(this);
         commandManager.registerCommands();
 
-        getLogger().info("Queue has been successfully enabled.");
+        getLogger().info("Registering placeholders...");
+        new QueuePlaceholder(this);
+
+        getLogger().info(getName() + " has been successfully enabled.");
     }
 
     public QueueManager getQueueManager() {

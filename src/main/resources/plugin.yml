@@ -6,7 +6,6 @@ authors: [ Blurmit ]
 description: A simple queue plugin
 softdepend:
   - Basics
-
 permissions:
   queue.join:
     default: true

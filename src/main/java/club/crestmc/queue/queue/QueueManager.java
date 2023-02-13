@@ -4,6 +4,9 @@ import club.crestmc.queue.Queue;
 import club.crestmc.queue.util.Collections;
 import club.crestmc.queue.util.Messages;
 import club.crestmc.queue.util.PluginMessageHelper;
+import me.blurmit.basics.Basics;
+import me.blurmit.basics.rank.Rank;
+import me.blurmit.basics.util.Placeholders;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -28,7 +31,7 @@ public class QueueManager {
         plugin.getServer().getPluginManager().registerEvents(new QueueListener(plugin), plugin);
 
         int waitMessageSendInterval = plugin.getConfig().getInt("Waiting-Message-Send-Interval");
-        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, this::runQueue, 0L, 20L);
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, this::runQueue, 0L, 10L);
         plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, this::sendStatusMessages, 20L * waitMessageSendInterval, 20L * waitMessageSendInterval);
 
         this.queues = new HashSet<>();
@@ -239,25 +242,15 @@ public class QueueManager {
 
 
     private String getServerStatus(String server) throws ReflectiveOperationException {
-        Event placeholderRequestEvent = (Event) Class.forName("me.blurmit.basics.events.PlaceholderRequestEvent")
-                    .getConstructors()[0]
-                    .newInstance("playercount-" + server, null, null, null, null, null, true);
-
-        plugin.getServer().getPluginManager().callEvent(placeholderRequestEvent);
-
-        return (String) placeholderRequestEvent.getClass().getMethod("getResponse").invoke(placeholderRequestEvent);
+        return Placeholders.parsePlaceholder("{playercount-" + server + "}", true);
     }
 
     private long getPriority(UUID uuid) {
         try {
-            Class<? extends JavaPlugin> basicsClass = (Class<? extends JavaPlugin>) Class.forName("me.blurmit.Basics");
-            JavaPlugin basicsPlugin = JavaPlugin.getPlugin(basicsClass);
-
-            Object rankManager = basicsClass.getMethod("getRankManager").invoke(basicsPlugin);
-            Object rank = rankManager.getClass().getMethod("getHighestRankByPriority", UUID.class).invoke(rankManager, UUID.randomUUID());
-
-            return (long) rank.getClass().getMethod("getPriority").invoke(rank);
-        } catch (ReflectiveOperationException e) {
+            Basics basics = JavaPlugin.getPlugin(Basics.class);
+            Rank rank = basics.getRankManager().getHighestRankByPriority(uuid);
+            return rank.getPriority();
+        } catch (NoClassDefFoundError e) {
             Player player = plugin.getServer().getPlayer(uuid);
 
             if (player == null) {
