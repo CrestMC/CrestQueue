@@ -6,6 +6,7 @@ authors: [ Blurmit ]
 description: A simple queue plugin
 softdepend:
   - Basics
+  - LuckPerms
 permissions:
   queue.join:
     default: true

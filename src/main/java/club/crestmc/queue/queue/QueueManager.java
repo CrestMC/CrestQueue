@@ -6,7 +6,13 @@ import club.crestmc.queue.util.Messages;
 import club.crestmc.queue.util.PluginMessageHelper;
 import me.blurmit.basics.Basics;
 import me.blurmit.basics.rank.Rank;
+import me.blurmit.basics.rank.RankManager;
 import me.blurmit.basics.util.Placeholders;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.group.Group;
+import net.luckperms.api.model.group.GroupManager;
+import net.luckperms.api.model.user.UserManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -122,12 +128,12 @@ public class QueueManager {
             return;
         }
 
-        UUID queuedPlayer = queuedPlayers.keySet().stream().sorted(Comparator.comparingLong(priority -> -getPriority(priority))).distinct().toArray(UUID[]::new)[0];
+        UUID queuedPlayer = queuedPlayers.keySet().stream().sorted(Comparator.comparingLong(priority -> -getRankPriority(priority))).distinct().toArray(UUID[]::new)[0];
         sendToServer(queuedPlayer, server);
     }
 
     private void sendStatusMessages() {
-        Set<UUID> sortedQueuedPlayers = queuedPlayers.keySet().stream().sorted(Comparator.comparingLong(priority -> -getPriority(priority))).collect(Collectors.toCollection(LinkedHashSet::new));
+        Set<UUID> sortedQueuedPlayers = queuedPlayers.keySet().stream().sorted(Comparator.comparingLong(priority -> -getRankPriority(priority))).collect(Collectors.toCollection(LinkedHashSet::new));
 
         if (plugin.getServer().getOnlinePlayers().size() == 0) {
             return;
@@ -245,20 +251,45 @@ public class QueueManager {
         return Placeholders.parsePlaceholder("{playercount-" + server + "}", true);
     }
 
-    private long getPriority(UUID uuid) {
-        try {
+    private long getRankPriority(UUID uuid) {
+        if (plugin.getServer().getPluginManager().getPlugin("Basics") != null) {
             Basics basics = JavaPlugin.getPlugin(Basics.class);
-            Rank rank = basics.getRankManager().getHighestRankByPriority(uuid);
-            return rank.getPriority();
-        } catch (NoClassDefFoundError e) {
-            Player player = plugin.getServer().getPlayer(uuid);
+            RankManager rankManager = basics.getRankManager();
 
-            if (player == null) {
-                return 0;
+            if (rankManager == null) {
+                return getDefaultPriority(uuid);
             }
 
-            return player.hasPermission("queue.priority") ? 1 : 0;
+            Rank rank = rankManager.getHighestRankByPriority(uuid);
+
+            return rank.getPriority();
         }
+
+        return getLuckPermsPriority(uuid);
+    }
+
+    private int getLuckPermsPriority(UUID uuid) {
+        if (plugin.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
+            LuckPerms luckPerms = LuckPermsProvider.get();
+            GroupManager groupManager = luckPerms.getGroupManager();
+            UserManager userManager = luckPerms.getUserManager();
+
+            String groupName = userManager.getUser(uuid).getPrimaryGroup();
+            Group group = groupManager.getGroup(groupName);
+            return group.getWeight().getAsInt();
+        }
+
+        return getDefaultPriority(uuid);
+    }
+
+    private int getDefaultPriority(UUID uuid) {
+        Player player = plugin.getServer().getPlayer(uuid);
+
+        if (player == null) {
+            return 0;
+        }
+
+        return player.hasPermission("queue.priority") ? 1 : 0;
     }
 
 }
