@@ -13,6 +13,7 @@ import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.group.GroupManager;
 import net.luckperms.api.model.user.UserManager;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -248,7 +249,7 @@ public class QueueManager {
 
 
     private String getServerStatus(String server) throws ReflectiveOperationException {
-        return Placeholders.parsePlaceholder("{server-playercount-" + server + "}", true);
+        return ChatColor.stripColor(Placeholders.parsePlaceholder("{server-playercount-" + server + "}", true));
     }
 
     private long getRankPriority(UUID uuid) {
