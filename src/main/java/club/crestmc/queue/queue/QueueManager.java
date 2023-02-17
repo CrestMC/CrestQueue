@@ -248,7 +248,7 @@ public class QueueManager {
 
 
     private String getServerStatus(String server) throws ReflectiveOperationException {
-        return Placeholders.parsePlaceholder("{playercount-" + server + "}", true);
+        return Placeholders.parsePlaceholder("{server-playercount-" + server + "}", true);
     }
 
     private long getRankPriority(UUID uuid) {
