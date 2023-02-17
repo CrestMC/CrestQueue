@@ -33,14 +33,6 @@ public class QueuePlaceholder implements Listener {
                 String server = placeholderName.replaceFirst("players-", "");
                 event.setResponse(queue.getPlayersQueuedFor(server).size() + "");
             }
-
-            if (placeholderName.startsWith("status-")) {
-                String server = placeholderName.replaceFirst("status-", "");
-                event.setResponse(queue.isServerOffline(server) ?
-                                ChatColor.RED + "Offline" : queue.isServerFull(server) ?
-                                ChatColor.GOLD + "Full" : queue.isServerWhitelisted(server) ?
-                                ChatColor.YELLOW + "Whitelisted" : queue.getPlayersQueuedFor(server).size() + "");
-            }
         } catch (Exception e) {
             event.setResponse("");
         }

@@ -112,11 +112,11 @@ public class QueueManager {
 
         String server = playerEntry.getValue();
 
-        if (isServerOffline(server)) {
+        if (checkServerState(server, "Offline")) {
             return;
         }
 
-        if (isServerFull(server)) {
+        if (isServerFull(server) || checkServerState(server, "Whitelisted")) {
             if (player == null) {
                 return;
             }
@@ -153,9 +153,16 @@ public class QueueManager {
                     .replace("{queue-total}", getPlayersQueuedFor(server).size() + "")
                     .replace("{queue-position}", position + "");
 
-            if (isServerOffline(server)) {
+            if (checkServerState(server, "Offline")) {
                 if (player != null) {
                     player.sendMessage(waitMessage.replace("{queue-server-state}", "Offline"));
+                }
+                return;
+            }
+
+            if (checkServerState(server, "Whitelisted")) {
+                if (player != null) {
+                    player.sendMessage(waitMessage.replace("{queue-server-state}", "Whitelisted"));
                 }
                 return;
             }
@@ -223,32 +230,18 @@ public class QueueManager {
             int max = Integer.parseInt(response.split("/")[1]);
 
             return online >= max;
-        } catch (ReflectiveOperationException | NumberFormatException e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean isServerOffline(String server) {
-        try {
-            return getServerStatus(server).contains("Offline");
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean isServerWhitelisted(String server) {
-        try {
-            return getServerStatus(server).contains("Whitelisted");
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public boolean checkServerState(String server, String state) {
+        return getServerStatus(server).contains(state);
     }
 
 
-    private String getServerStatus(String server) throws ReflectiveOperationException {
+    private String getServerStatus(String server) {
         return ChatColor.stripColor(Placeholders.parsePlaceholder("{server-playercount-" + server + "}", true));
     }
 
