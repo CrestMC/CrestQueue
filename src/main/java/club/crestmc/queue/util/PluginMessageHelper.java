@@ -1,6 +1,6 @@
 package club.crestmc.queue.util;
 
-import club.crestmc.queue.Queue;
+import club.crestmc.queue.QueuePlugin;
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -24,7 +24,7 @@ public class PluginMessageHelper {
         Player player = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
 
         if (player != null) {
-            player.sendPluginMessage(JavaPlugin.getPlugin(Queue.class), "BungeeCord", output.toByteArray());
+            player.sendPluginMessage(JavaPlugin.getPlugin(QueuePlugin.class), "BungeeCord", output.toByteArray());
         }
     }
 

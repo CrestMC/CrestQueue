@@ -1,6 +1,6 @@
 package club.crestmc.queue.queue;
 
-import club.crestmc.queue.Queue;
+import club.crestmc.queue.QueuePlugin;
 import club.crestmc.queue.util.Collections;
 import club.crestmc.queue.util.Messages;
 import club.crestmc.queue.util.PluginMessageHelper;
@@ -16,7 +16,6 @@ import net.luckperms.api.model.user.UserManager;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
@@ -24,14 +23,14 @@ import java.util.stream.Collectors;
 
 public class QueueManager {
 
-    private final Queue plugin;
+    private final QueuePlugin plugin;
 
     private final Set<club.crestmc.queue.queue.Queue> queues;
     private final NavigableMap<UUID, String> queuedPlayers;
     private final Map<UUID, String> onlineQueuedPlayers;
     private final Map<UUID, Integer> exitingPlayers;
 
-    public QueueManager(Queue plugin) {
+    public QueueManager(QueuePlugin plugin) {
         this.plugin = plugin;
 
         plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
@@ -116,7 +115,7 @@ public class QueueManager {
             return;
         }
 
-        if (isServerFull(server) || checkServerState(server, "Whitelisted")) {
+        if (checkServerState(server, "Whitelisted") || isServerFull(server)) {
             if (player == null) {
                 return;
             }

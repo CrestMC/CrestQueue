@@ -1,17 +1,16 @@
 package club.crestmc.queue.listeners;
 
-import club.crestmc.queue.Queue;
+import club.crestmc.queue.QueuePlugin;
 import club.crestmc.queue.queue.QueueManager;
 import me.blurmit.basics.events.PlaceholderRequestEvent;
-import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class QueuePlaceholder implements Listener {
 
-    private final Queue plugin;
+    private final QueuePlugin plugin;
 
-    public QueuePlaceholder(Queue plugin) {
+    public QueuePlaceholder(QueuePlugin plugin) {
         this.plugin = plugin;
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);

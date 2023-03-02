@@ -1,6 +1,6 @@
 package club.crestmc.queue.command.defined;
 
-import club.crestmc.queue.Queue;
+import club.crestmc.queue.QueuePlugin;
 import club.crestmc.queue.command.CommandBase;
 import club.crestmc.queue.util.Messages;
 import org.bukkit.ChatColor;
@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 
 public class JoinQueueCommand extends CommandBase implements TabCompleter {
 
-    private final Queue plugin;
+    private final QueuePlugin plugin;
 
-    protected JoinQueueCommand(Queue plugin) {
+    protected JoinQueueCommand(QueuePlugin plugin) {
         super(plugin.getName());
         setName("joinqueue");
         setAliases(Arrays.asList("joinq", "queuejoin", "enterqueue", "join"));

@@ -1,6 +1,6 @@
 package club.crestmc.queue.queue;
 
-import club.crestmc.queue.Queue;
+import club.crestmc.queue.QueuePlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -10,9 +10,9 @@ import java.util.UUID;
 
 public class QueueListener implements Listener {
 
-    private final Queue plugin;
+    private final QueuePlugin plugin;
 
-    public QueueListener(Queue plugin) {
+    public QueueListener(QueuePlugin plugin) {
         this.plugin = plugin;
     }
 

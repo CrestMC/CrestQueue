@@ -5,7 +5,7 @@ import club.crestmc.queue.listeners.QueuePlaceholder;
 import club.crestmc.queue.queue.QueueManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class Queue extends JavaPlugin {
+public final class QueuePlugin extends JavaPlugin {
 
     private QueueManager queueManager;
     private CommandManager commandManager;
