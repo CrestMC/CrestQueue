@@ -1,6 +1,6 @@
 name: Queue
 version: '${version}'
-main: club.crestmc.queue.Queue
+main: club.crestmc.queue.QueuePlugin
 api-version: 1.16
 authors: [ Blurmit ]
 description: A simple queue plugin

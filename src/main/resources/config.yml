@@ -27,5 +27,5 @@ Messages:
     &cThe server you are trying to join is currently {queue-server-state}.
     &r
   Already-In-Queue: "&cYou are already queued for a server."
-  Not-In-Queue: "&cYou are not queued for that server."
+  Not-In-Queue: "&cYou are not queued for a server."
   Invalid-Queue: "&cThere is no queue with the name &e{name}&c."

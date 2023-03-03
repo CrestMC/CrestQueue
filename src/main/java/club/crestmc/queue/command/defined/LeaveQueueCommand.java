@@ -41,6 +41,12 @@ public class LeaveQueueCommand extends CommandBase implements TabCompleter {
         }
 
         Player player = (Player) sender;
+
+        if (!plugin.getQueueManager().isPlayerQueued(player.getUniqueId())) {
+            player.sendMessage(Messages.NOT_IN_QUEUE + "");
+            return true;
+        }
+
         String serverName = plugin.getQueueManager().getServerPlayerQueuedFor(player.getUniqueId());
         Queue queue = plugin.getQueueManager().getQueue(serverName);
 
